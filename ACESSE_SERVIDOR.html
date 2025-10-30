@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚠️ Acesse pelo Servidor - Cuidar.pt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .warning-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            color: #856404;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .alert h2 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        
+        .alert p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .correct-url {
+            background: #d4edda;
+            border: 3px solid #28a745;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+        
+        .correct-url h2 {
+            color: #155724;
+            margin-bottom: 1rem;
+        }
+        
+        .url-box {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: #3abebd;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        
+        .btn-access {
+            background: #3abebd;
+            color: white;
+            padding: 1.5rem 3rem;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-access:hover {
+            background: #2ea5a4;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(58, 190, 189, 0.4);
+        }
+        
+        .steps {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .steps h3 {
+            color: #1e3a5f;
+            margin-bottom: 1rem;
+        }
+        
+        .step {
+            background: white;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3abebd;
+            border-radius: 5px;
+        }
+        
+        .step strong {
+            color: #3abebd;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="warning-icon">⚠️</div>
+        <h1>Atenção: Acesso Incorreto!</h1>
+        
+        <div class="alert">
+            <h2>❌ Problema Detectado</h2>
+            <p><strong>Você está abrindo o arquivo HTML diretamente do disco!</strong></p>
+            <p>Isso causa vários problemas:</p>
+            <ul style="margin-left: 2rem; line-height: 2;">
+                <li>❌ JavaScript não carrega corretamente</li>
+                <li>❌ APIs não funcionam</li>
+                <li>❌ Login não funciona</li>
+                <li>❌ Páginas não carregam direito</li>
+            </ul>
+        </div>
+        
+        <div class="correct-url">
+            <h2>✅ Forma Correta de Acessar</h2>
+            <p><strong>Acesse pelo servidor local:</strong></p>
+            <div class="url-box">
+                http://localhost:3000
+            </div>
+        </div>
+        
+        <div class="steps">
+            <h3>📋 Como Acessar Corretamente:</h3>
+            
+            <div class="step">
+                <strong>1. Certifique-se que o servidor está rodando</strong>
+                No terminal/PowerShell, rode:
+                <code style="background: #f0f0f0; padding: 0.25rem 0.5rem; border-radius: 5px; display: block; margin-top: 0.5rem;">
+                    cd C:\Users\BrasrioCG_02\Desktop\Cuidar.pt\server<br>
+                    node server.js
+                </code>
+            </div>
+            
+            <div class="step">
+                <strong>2. Abra o navegador</strong>
+                Abra Chrome, Firefox, Edge, etc.
+            </div>
+            
+            <div class="step">
+                <strong>3. Digite na barra de endereço</strong>
+                <code style="background: #f0f0f0; padding: 0.25rem 0.5rem; border-radius: 5px; display: block; margin-top: 0.5rem;">
+                    http://localhost:3000/index.html
+                </code>
+                OU
+                <code style="background: #f0f0f0; padding: 0.25rem 0.5rem; border-radius: 5px; display: block; margin-top: 0.5rem;">
+                    http://localhost:3000/login.html
+                </code>
+            </div>
+            
+            <div class="step">
+                <strong>4. NÃO clique duplo nos arquivos HTML</strong>
+                Sempre acesse pelo navegador digitando localhost:3000
+            </div>
+        </div>
+        
+        <a href="http://localhost:3000/login.html" class="btn-access">
+            🚀 Acessar Sistema Corretamente
+        </a>
+        
+        <p style="margin-top: 2rem; color: #5a7184;">
+            💡 <strong>Dica:</strong> Salve este endereço nos favoritos:<br>
+            <code>http://localhost:3000</code>
+        </p>
+    </div>
+    
+    <script>
+        // Tenta redirecionar automaticamente após 3 segundos
+        setTimeout(() => {
+            if (confirm('Deseja ser redirecionado para o servidor agora?')) {
+                window.location.href = 'http://localhost:3000/login.html';
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
+

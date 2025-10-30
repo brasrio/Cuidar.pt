@@ -1,0 +1,123 @@
+═══════════════════════════════════════════════════════════════
+    ⚠️  ATENÇÃO: COMO ACESSAR O SISTEMA CORRETAMENTE ⚠️
+═══════════════════════════════════════════════════════════════
+
+❌ NÃO FAÇA ISSO:
+   - NÃO clique duplo nos arquivos HTML
+   - NÃO abra os arquivos diretamente pelo Windows Explorer
+   - NÃO use endereços tipo "C:/Users/..."
+
+✅ FAÇA ASSIM:
+
+1️⃣ INICIE O SERVIDOR
+   No PowerShell ou Terminal, execute:
+   
+   cd C:\Users\BrasrioCG_02\Desktop\Cuidar.pt\server
+   node server.js
+   
+   Aguarde aparecer: "🚀 Servidor Cuidar.pt rodando na porta 3000"
+
+2️⃣ ABRA O NAVEGADOR
+   Abra Chrome, Firefox, Edge ou outro navegador
+
+3️⃣ DIGITE NA BARRA DE ENDEREÇO
+   
+   👉 http://localhost:3000
+   
+   OU especificamente:
+   
+   👉 http://localhost:3000/index.html  (Página inicial)
+   👉 http://localhost:3000/login.html  (Login)
+   👉 http://localhost:3000/cadastro.html  (Cadastro)
+
+═══════════════════════════════════════════════════════════════
+    📋 FLUXO COMPLETO DE USO
+═══════════════════════════════════════════════════════════════
+
+PARA ADMIN:
+-----------
+1. Acesse: http://localhost:3000/login.html
+2. Email: admin@cuidar.pt
+3. Senha: Admin@2024
+4. Será redirecionado para: http://localhost:3000/dashboard-admin.html
+5. Veja todos os usuários separados por tipo
+
+
+PARA CUIDADOR:
+--------------
+1. Acesse: http://localhost:3000/cadastro.html
+2. Cadastre-se como "Cuidador Profissional"
+3. Anote a senha gerada
+4. Faça login: http://localhost:3000/login.html
+5. Será redirecionado para: http://localhost:3000/dashboard.html
+6. Clique em "Completar Perfil Profissional"
+7. Preencha: foto, valor, áreas, qualificações, disponibilidade
+
+
+PARA CLIENTE:
+-------------
+1. Acesse: http://localhost:3000/cadastro.html
+2. Cadastre-se como "Família"
+3. Anote a senha gerada
+4. Faça login: http://localhost:3000/login.html
+5. Será redirecionado para: http://localhost:3000/dashboard.html
+6. Clique em "Buscar Cuidadores"
+7. Use filtros para encontrar cuidadores
+
+
+ACESSO PÚBLICO (sem login):
+---------------------------
+1. Acesse: http://localhost:3000/buscar-cuidadores.html
+2. Veja todos os cuidadores disponíveis
+3. Use filtros por cidade, valor, dia, qualificação
+4. Para solicitar serviços, faça login
+
+═══════════════════════════════════════════════════════════════
+    🔧 PROBLEMAS COMUNS
+═══════════════════════════════════════════════════════════════
+
+❌ "Cannot GET /..."
+   → Servidor não está rodando
+   → Execute: node server.js no diretório server
+
+❌ "Erro ao conectar com servidor"
+   → Servidor não está rodando
+   → Verifique se apareceu "Servidor rodando na porta 3000"
+
+❌ Vejo endereço "C:/Users/..." na barra
+   → Você está abrindo arquivo local
+   → SEMPRE use localhost:3000
+
+❌ Login não funciona
+   → Você está em arquivo local
+   → Acesse http://localhost:3000/login.html
+
+❌ Dashboard aparece vazio
+   → Servidor não está rodando
+   → OU você está em arquivo local
+   → Sempre use localhost:3000
+
+═══════════════════════════════════════════════════════════════
+    💡 DICAS
+═══════════════════════════════════════════════════════════════
+
+✅ Salve nos favoritos: http://localhost:3000
+
+✅ Deixe o servidor rodando enquanto usa o sistema
+
+✅ Se precisar reiniciar o servidor:
+   - Pressione Ctrl+C no terminal
+   - Execute novamente: node server.js
+
+✅ Feche o navegador completamente se algo não funcionar
+   - Use Ctrl+Shift+R para recarregar sem cache
+
+═══════════════════════════════════════════════════════════════
+
+📍 ACESSO RÁPIDO: http://localhost:3000
+
+🎯 Em caso de dúvida, SEMPRE use localhost:3000, NUNCA clique
+   duplo nos arquivos HTML!
+
+═══════════════════════════════════════════════════════════════
+

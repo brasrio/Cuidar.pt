@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Cuidadores - Cuidar.pt</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .busca-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .busca-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .busca-header h1 {
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+        
+        .busca-header p {
+            color: #5a7184;
+            font-size: 1.1rem;
+        }
+        
+        /* Filtros */
+        .filtros-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .filtros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filtro-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filtro-group label {
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filtro-group select,
+        .filtro-group input {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .filtro-group select:focus,
+        .filtro-group input:focus {
+            outline: none;
+            border-color: #3abebd;
+        }
+        
+        .btn-buscar {
+            background: #3abebd;
+            color: white;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-buscar:hover {
+            background: #2ea5a4;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(58, 190, 189, 0.3);
+        }
+        
+        /* Resultados */
+        .resultados-section {
+            margin-top: 3rem;
+        }
+        
+        .resultados-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .resultados-count {
+            color: #5a7184;
+            font-size: 1.1rem;
+        }
+        
+        .resultados-count strong {
+            color: #3abebd;
+            font-size: 1.5rem;
+        }
+        
+        .ordenar-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        /* Cards de Cuidadores */
+        .cuidadores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .cuidador-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .cuidador-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #3abebd;
+        }
+        
+        .cuidador-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cuidador-foto {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            overflow: hidden;
+            border: 3px solid #f0f0f0;
+            flex-shrink: 0;
+        }
+        
+        .cuidador-foto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cuidador-info-header {
+            flex: 1;
+        }
+        
+        .cuidador-nome {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1e3a5f;
+            margin-bottom: 0.25rem;
+        }
+        
+        .cuidador-badge {
+            display: inline-block;
+            background: #3abebd;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .cuidador-valor {
+            background: #e8f8f8;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .valor-numero {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3abebd;
+        }
+        
+        .valor-label {
+            color: #5a7184;
+            font-size: 0.875rem;
+        }
+        
+        .cuidador-detalhes {
+            margin-bottom: 1.5rem;
+        }
+        
+        .detalhe-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: #5a7184;
+        }
+        
+        .detalhe-item span:first-child {
+            font-size: 1.2rem;
+        }
+        
+        .qualificacoes-mini {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .tag-mini {
+            background: #f0f0f0;
+            color: #5a7184;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+        }
+        
+        .cuidador-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn-action {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .btn-ver-perfil {
+            background: #5a7184;
+            color: white;
+        }
+        
+        .btn-ver-perfil:hover {
+            background: #4a5f6f;
+        }
+        
+        .btn-solicitar {
+            background: #3abebd;
+            color: white;
+        }
+        
+        .btn-solicitar:hover {
+            background: #2ea5a4;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #5a7184;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #5a7184;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+        }
+        
+        .disponibilidade-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: #d4edda;
+            color: #155724;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .filtros-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cuidadores-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar container">
+            <a href="index.html" class="navbar-brand">
+                <img src="assets/images/logo.svg" alt="Cuidar.pt Logo" class="navbar-logo">
+                <span class="navbar-title">Cuidar.pt</span>
+            </a>
+            
+            <button class="navbar-toggle" aria-label="Menu">
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+            </button>
+            
+            <ul class="navbar-menu">
+                <li><a href="dashboard.html" class="navbar-link">Dashboard</a></li>
+                <li><a href="buscar-cuidadores.html" class="navbar-link">Buscar Cuidadores</a></li>
+                <li><button onclick="logout()" class="btn-logout" style="border: none;">Sair</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Busca Content -->
+    <section class="dashboard">
+        <div class="busca-container">
+            <div class="busca-header">
+                <h1>🔍 Buscar Cuidadores</h1>
+                <p>Encontre o profissional ideal para suas necessidades</p>
+            </div>
+            
+            <div id="alertMessage" class="alert"></div>
+            
+            <!-- Filtros -->
+            <div class="filtros-section">
+                <h2 style="color: #1e3a5f; margin-bottom: 1.5rem;">⚙️ Filtros de Busca</h2>
+                
+                <div class="filtros-grid">
+                    <div class="filtro-group">
+                        <label>📍 Cidade</label>
+                        <select id="filtroCidade">
+                            <option value="">Todas as cidades</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label>💰 Valor Máximo (€/hora)</label>
+                        <input type="number" id="filtroValor" placeholder="Ex: 20" min="0" step="0.50">
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label>📅 Disponível em</label>
+                        <select id="filtroDia">
+                            <option value="">Qualquer dia</option>
+                            <option value="Segunda-feira">Segunda-feira</option>
+                            <option value="Terça-feira">Terça-feira</option>
+                            <option value="Quarta-feira">Quarta-feira</option>
+                            <option value="Quinta-feira">Quinta-feira</option>
+                            <option value="Sexta-feira">Sexta-feira</option>
+                            <option value="Sábado">Sábado</option>
+                            <option value="Domingo">Domingo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label>🎓 Qualificação</label>
+                        <select id="filtroQualificacao">
+                            <option value="">Todas</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn-buscar" onclick="buscarCuidadores()">
+                    🔍 Buscar Cuidadores
+                </button>
+            </div>
+            
+            <!-- Resultados -->
+            <div class="resultados-section" id="resultadosSection" style="display: none;">
+                <div class="resultados-header">
+                    <div class="resultados-count">
+                        <strong id="totalResultados">0</strong> cuidador(es) encontrado(s)
+                    </div>
+                    <select class="ordenar-select" id="ordenarPor" onchange="ordenarResultados()">
+                        <option value="relevancia">Mais Relevante</option>
+                        <option value="menor-preco">Menor Preço</option>
+                        <option value="maior-preco">Maior Preço</option>
+                        <option value="mais-experiencia">Mais Experiência</option>
+                    </select>
+                </div>
+                
+                <div id="loadingResults" class="loading" style="display: none;">
+                    <p>🔍 Buscando cuidadores...</p>
+                </div>
+                
+                <div class="cuidadores-grid" id="cuidadoresGrid">
+                    <!-- Cards serão inseridos aqui -->
+                </div>
+                
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">😔</div>
+                    <h3>Nenhum cuidador encontrado</h3>
+                    <p>Tente ajustar os filtros de busca</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/main.js"></script>
+    <script src="js/buscar-cuidadores.js"></script>
+</body>
+</html>
+

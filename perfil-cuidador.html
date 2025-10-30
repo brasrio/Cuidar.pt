@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil Profissional - Cuidar.pt</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .perfil-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .perfil-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .perfil-header h1 {
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+        }
+        
+        .perfil-header p {
+            color: #5a7184;
+        }
+        
+        .foto-perfil-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .foto-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            overflow: hidden;
+            border: 5px solid #f0f0f0;
+        }
+        
+        .foto-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .upload-btn {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .upload-btn input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .upload-btn label {
+            background: #3abebd;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn label:hover {
+            background: #2ea5a4;
+            transform: translateY(-2px);
+        }
+        
+        .form-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .form-section h2 {
+            color: #1e3a5f;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #1e3a5f;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3abebd;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-group small {
+            display: block;
+            margin-top: 0.25rem;
+            color: #5a7184;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        
+        .horarios-grid {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .horario-dia {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .horario-dia h4 {
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+        }
+        
+        .horario-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        
+        .horario-inputs input {
+            padding: 0.5rem;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #3abebd;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2ea5a4;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #5a7184;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4a5f6f;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #5a7184;
+        }
+        
+        .qualificacoes-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .tag {
+            background: #3abebd;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar container">
+            <a href="index.html" class="navbar-brand">
+                <img src="assets/images/logo.svg" alt="Cuidar.pt Logo" class="navbar-logo">
+                <span class="navbar-title">Cuidar.pt</span>
+            </a>
+            
+            <button class="navbar-toggle" aria-label="Menu">
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+            </button>
+            
+            <ul class="navbar-menu">
+                <li><a href="dashboard.html" class="navbar-link">Dashboard</a></li>
+                <li><a href="perfil-cuidador.html" class="navbar-link">Meu Perfil</a></li>
+                <li><button onclick="logout()" class="btn-logout" style="border: none;">Sair</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Perfil Content -->
+    <section class="dashboard">
+        <div class="perfil-container">
+            <div class="perfil-header">
+                <h1>👨‍⚕️ Meu Perfil Profissional</h1>
+                <p>Complete suas informações para que famílias possam encontrá-lo</p>
+            </div>
+            
+            <div id="alertMessage" class="alert"></div>
+            
+            <!-- Foto de Perfil -->
+            <div class="foto-perfil-section">
+                <h2>📸 Foto de Perfil</h2>
+                <div class="foto-preview" id="fotoPreview">
+                    👤
+                </div>
+                <div class="upload-btn">
+                    <label for="fotoPerfil">📷 Escolher Foto</label>
+                    <input type="file" id="fotoPerfil" accept="image/*">
+                </div>
+                <p style="margin-top: 1rem; color: #5a7184; font-size: 0.875rem;">
+                    Formatos aceitos: JPG, PNG (máx. 2MB)
+                </p>
+            </div>
+            
+            <form id="perfilForm">
+                <!-- Informações Profissionais -->
+                <div class="form-section">
+                    <h2>💼 Informações Profissionais</h2>
+                    
+                    <div class="form-group">
+                        <label for="descricao">Sobre Você</label>
+                        <textarea 
+                            id="descricao" 
+                            placeholder="Conte um pouco sobre sua experiência e especialidades..."
+                            maxlength="500"
+                        ></textarea>
+                        <small>Máximo 500 caracteres</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="experiencia">Anos de Experiência</label>
+                        <input 
+                            type="number" 
+                            id="experiencia" 
+                            min="0" 
+                            max="50"
+                            placeholder="Ex: 5"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="valorHora">Valor por Hora (€)</label>
+                        <input 
+                            type="number" 
+                            id="valorHora" 
+                            min="0" 
+                            step="0.50"
+                            placeholder="Ex: 15.00"
+                        >
+                        <small>Valor em euros (€)</small>
+                    </div>
+                </div>
+                
+                <!-- Áreas de Atuação -->
+                <div class="form-section">
+                    <h2>📍 Áreas de Atuação</h2>
+                    <p style="color: #5a7184; margin-bottom: 1rem;">
+                        Selecione as cidades/regiões onde você pode trabalhar:
+                    </p>
+                    
+                    <div class="checkbox-group" id="areasAtuacao">
+                        <!-- Será preenchido por JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Qualificações -->
+                <div class="form-section">
+                    <h2>🎓 Qualificações e Especialidades</h2>
+                    
+                    <div class="form-group">
+                        <label for="novaQualificacao">Adicionar Qualificação</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input 
+                                type="text" 
+                                id="novaQualificacao" 
+                                placeholder="Ex: Enfermagem, Primeiros Socorros..."
+                            >
+                            <button type="button" class="btn btn-primary" onclick="adicionarQualificacao()">
+                                Adicionar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="qualificacoes-tags" id="qualificacoesList">
+                        <!-- Tags serão adicionadas aqui -->
+                    </div>
+                </div>
+                
+                <!-- Disponibilidade -->
+                <div class="form-section">
+                    <h2>📅 Disponibilidade</h2>
+                    <p style="color: #5a7184; margin-bottom: 1rem;">
+                        Marque os dias e horários em que você está disponível:
+                    </p>
+                    
+                    <div class="horarios-grid" id="horariosDisponibilidade">
+                        <!-- Será preenchido por JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Botões -->
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='dashboard.html'">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        💾 Salvar Perfil
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script src="js/main.js"></script>
+    <script src="js/localizacoes-portugal.js"></script>
+    <script src="js/perfil-cuidador.js"></script>
+
