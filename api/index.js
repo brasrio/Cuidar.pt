@@ -1,34 +1,91 @@
 /**
  * Cuidar.pt - API Serverless para Vercel
- * Funções serverless para processamento de cadastros, login e API
+ * Funções serverless com MongoDB Atlas
  */
 
-const path = require('path');
-const fs = require('fs').promises;
 const nodemailer = require('nodemailer');
+const db = require('./db');
 
-// Helper para ler o banco de dados
-async function readDatabase() {
-    try {
-        const dbPath = path.join(process.cwd(), 'server', 'database.json');
-        const data = await fs.readFile(dbPath, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error('Erro ao ler database.json:', error);
-        return { users: [] };
+// Usa MongoDB se MONGODB_URI estiver configurado, senão usa fallback em memória
+const USE_MONGODB = !!process.env.MONGODB_URI;
+
+// Fallback em memória (apenas para desenvolvimento/teste)
+let memoryDB = {
+    users: [
+        {
+            id: "admin-1730000000000",
+            nome: "Administrador",
+            email: "admin@cuidar.pt",
+            telefone: "+351000000000",
+            distrito: "Lisboa",
+            cidade: "Lisboa",
+            userType: "admin",
+            role: "admin",
+            senha: "Admin@2024",
+            isActive: true,
+            createdAt: "2024-10-30T00:00:00.000Z",
+            updatedAt: "2024-10-30T00:00:00.000Z"
+        }
+    ]
+};
+
+console.log(`🗄️  Usando banco: ${USE_MONGODB ? 'MongoDB Atlas' : 'Memória (temporário)'}`);
+
+// Helper para obter usuários
+async function getAllUsers() {
+    if (USE_MONGODB) {
+        return await db.getAllUsers();
     }
+    return memoryDB.users;
 }
 
-// Helper para salvar no banco de dados
-async function saveDatabase(data) {
-    try {
-        const dbPath = path.join(process.cwd(), 'server', 'database.json');
-        await fs.writeFile(dbPath, JSON.stringify(data, null, 2), 'utf8');
-        return true;
-    } catch (error) {
-        console.error('Erro ao salvar database.json:', error);
-        return false;
+// Helper para buscar usuário por email
+async function getUserByEmail(email) {
+    if (USE_MONGODB) {
+        return await db.getUserByEmail(email);
     }
+    return memoryDB.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+}
+
+// Helper para buscar usuário por ID
+async function getUserById(id) {
+    if (USE_MONGODB) {
+        return await db.getUserById(id);
+    }
+    return memoryDB.users.find(u => u.id === id);
+}
+
+// Helper para criar usuário
+async function createUser(userData) {
+    if (USE_MONGODB) {
+        return await db.createUser(userData);
+    }
+    memoryDB.users.push(userData);
+    return userData;
+}
+
+// Helper para atualizar usuário
+async function updateUser(id, updateData) {
+    if (USE_MONGODB) {
+        return await db.updateUser(id, updateData);
+    }
+    const index = memoryDB.users.findIndex(u => u.id === id);
+    if (index !== -1) {
+        memoryDB.users[index] = { ...memoryDB.users[index], ...updateData };
+        return memoryDB.users[index];
+    }
+    return null;
+}
+
+// Helper para listar cuidadores
+async function getActiveCuidadores() {
+    if (USE_MONGODB) {
+        return await db.getActiveCuidadores();
+    }
+    return memoryDB.users.filter(u => 
+        (u.role === 'cuidador' || u.userType === 'cuidador') && 
+        (u.isActive !== false)
+    );
 }
 
 // Configuração do email
@@ -82,13 +139,10 @@ module.exports = async (req, res) => {
         // Login
         if (method === 'POST' && path === '/login') {
             const { email, senha } = req.body;
-            const db = await readDatabase();
             
-            const user = db.users.find(u => 
-                u.email.toLowerCase() === email.toLowerCase() && u.senha === senha
-            );
+            const user = await getUserByEmail(email);
 
-            if (!user) {
+            if (!user || user.senha !== senha) {
                 return res.status(401).json({
                     success: false,
                     message: 'Email ou senha incorretos'
@@ -115,11 +169,10 @@ module.exports = async (req, res) => {
         // Cadastro
         if (method === 'POST' && path === '/cadastro') {
             const { nome, email, telefone, distrito, cidade, userType, senha } = req.body;
-            const db = await readDatabase();
 
             // Verifica se o email já existe
-            const emailExists = db.users.some(u => u.email.toLowerCase() === email.toLowerCase());
-            if (emailExists) {
+            const existingUser = await getUserByEmail(email);
+            if (existingUser) {
                 return res.status(400).json({
                     success: false,
                     message: 'Este email já está cadastrado'
@@ -135,20 +188,17 @@ module.exports = async (req, res) => {
             const newUser = {
                 id: Date.now().toString(),
                 nome,
-                email,
+                email: email.toLowerCase(),
                 telefone,
                 distrito,
                 cidade,
                 userType,
                 senha,
                 role,
-                isActive: true,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
+                isActive: true
             };
 
-            db.users.push(newUser);
-            await saveDatabase(db);
+            await createUser(newUser);
 
             console.log(`✅ Cadastro realizado para ${email}`);
 
@@ -183,8 +233,8 @@ module.exports = async (req, res) => {
 
         // Listar usuários (admin)
         if (method === 'GET' && path === '/users') {
-            const db = await readDatabase();
-            const usersWithoutPasswords = db.users.map(({ senha, ...user }) => user);
+            const users = await getAllUsers();
+            const usersWithoutPasswords = users.map(({ senha, _id, ...user }) => user);
             return res.status(200).json({
                 success: true,
                 users: usersWithoutPasswords
@@ -193,13 +243,9 @@ module.exports = async (req, res) => {
 
         // Listar cuidadores
         if (method === 'GET' && path.startsWith('/cuidadores')) {
-            const db = await readDatabase();
-            let cuidadores = db.users.filter(u => 
-                (u.role === 'cuidador' || u.userType === 'cuidador') && 
-                (u.isActive !== false)
-            );
+            const cuidadores = await getActiveCuidadores();
 
-            const cuidadoresWithoutPasswords = cuidadores.map(({ senha, ...cuidador }) => cuidador);
+            const cuidadoresWithoutPasswords = cuidadores.map(({ senha, _id, ...cuidador }) => cuidador);
             return res.status(200).json({
                 success: true,
                 cuidadores: cuidadoresWithoutPasswords,
@@ -210,8 +256,7 @@ module.exports = async (req, res) => {
         // Buscar usuário específico
         if (method === 'GET' && path.startsWith('/users/')) {
             const userId = path.split('/users/')[1];
-            const db = await readDatabase();
-            const user = db.users.find(u => u.id === userId);
+            const user = await getUserById(userId);
             
             if (!user) {
                 return res.status(404).json({
@@ -220,7 +265,7 @@ module.exports = async (req, res) => {
                 });
             }
 
-            const { senha, ...userWithoutPassword } = user;
+            const { senha, _id, ...userWithoutPassword } = user;
             return res.status(200).json({
                 success: true,
                 user: userWithoutPassword
@@ -230,26 +275,17 @@ module.exports = async (req, res) => {
         // Atualizar usuário
         if (method === 'PUT' && path.startsWith('/users/')) {
             const userId = path.split('/users/')[1];
-            const db = await readDatabase();
-            const userIndex = db.users.findIndex(u => u.id === userId);
             
-            if (userIndex === -1) {
+            const updatedUser = await updateUser(userId, req.body);
+            
+            if (!updatedUser) {
                 return res.status(404).json({
                     success: false,
                     message: 'Usuário não encontrado'
                 });
             }
 
-            // Atualiza os dados do usuário
-            db.users[userIndex] = {
-                ...db.users[userIndex],
-                ...req.body,
-                updatedAt: new Date().toISOString()
-            };
-
-            await saveDatabase(db);
-
-            const { senha, ...userWithoutPassword } = db.users[userIndex];
+            const { senha, _id, ...userWithoutPassword } = updatedUser;
             return res.status(200).json({
                 success: true,
                 message: 'Usuário atualizado com sucesso',
