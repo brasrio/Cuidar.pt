@@ -2,9 +2,23 @@
 
 ## ✅ O QUE FOI CONFIGURADO
 
+### **Estrutura Serverless**
+- Criada pasta `/api` com funções serverless
+- Backend convertido para formato serverless do Vercel
+- Detecção automática de ambiente (dev/prod)
+
 Agora o sistema detecta **automaticamente** se está rodando em:
 - 🖥️ **Desenvolvimento** (`localhost`) → usa `http://localhost:3000/api`
 - 🌐 **Produção** (Vercel) → usa `https://cuidar-pt.vercel.app/api`
+
+---
+
+## 🔧 CORREÇÃO DO ERRO "builds"
+
+O erro foi corrigido! A nova estrutura usa:
+- ✅ `/api/index.js` - Função serverless principal
+- ✅ `vercel.json` simplificado (apenas rewrites)
+- ✅ Sem conflitos de build
 
 ---
 
