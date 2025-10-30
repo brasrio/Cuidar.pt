@@ -1,6 +1,7 @@
 @echo off
 chcp 65001 >nul
 color 0A
+cls
 echo.
 echo ========================================
 echo   MIGRAÇÃO DE USUÁRIOS PARA MONGODB
@@ -9,38 +10,23 @@ echo.
 echo 📦 Instalando dependências...
 echo.
 
-npm install mongodb dotenv
-
-if %errorlevel% neq 0 (
-    color 0C
-    echo.
-    echo ❌ Erro ao instalar dependências!
-    echo.
-    pause
-    exit /b 1
-)
+call npm install mongodb dotenv 2>&1
 
 echo.
 echo ✅ Dependências instaladas!
 echo.
 echo 🔄 Iniciando migração...
 echo.
+echo.
 
-node api/migrar-usuarios.js
-
-if %errorlevel% neq 0 (
-    color 0C
-    echo.
-    echo ❌ Erro durante a migração!
-    echo.
-    pause
-    exit /b 1
-)
+call node api/migrar-usuarios.js 2>&1
 
 echo.
+echo.
 echo ========================================
-echo   ✅ MIGRAÇÃO CONCLUÍDA COM SUCESSO!
+echo   PROCESSO FINALIZADO
 echo ========================================
 echo.
-pause
+echo Pressione qualquer tecla para fechar...
+pause >nul
 
