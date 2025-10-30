@@ -55,18 +55,27 @@ module.exports = async (req, res) => {
         return res.status(200).end();
     }
 
-    const { url, method } = req;
-    const path = url.replace('/api', '');
+    const { url, method, query } = req;
+    
+    // Extrai o path removendo /api e query params
+    let path = url.split('?')[0].replace('/api', '') || '/';
+    
+    // Se não tem path, usa a raiz
+    if (!path || path === '/api') {
+        path = '/';
+    }
 
     console.log(`📥 ${method} ${path}`);
 
     try {
-        // Health check
-        if (method === 'GET' && path === '/health') {
+        // Root / Health check
+        if (method === 'GET' && (path === '/' || path === '/health')) {
             return res.status(200).json({ 
                 status: 'ok', 
                 message: 'API Cuidar.pt está funcionando!',
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                path: path,
+                url: url
             });
         }
 
@@ -198,10 +207,65 @@ module.exports = async (req, res) => {
             });
         }
 
+        // Buscar usuário específico
+        if (method === 'GET' && path.startsWith('/users/')) {
+            const userId = path.split('/users/')[1];
+            const db = await readDatabase();
+            const user = db.users.find(u => u.id === userId);
+            
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Usuário não encontrado'
+                });
+            }
+
+            const { senha, ...userWithoutPassword } = user;
+            return res.status(200).json({
+                success: true,
+                user: userWithoutPassword
+            });
+        }
+
+        // Atualizar usuário
+        if (method === 'PUT' && path.startsWith('/users/')) {
+            const userId = path.split('/users/')[1];
+            const db = await readDatabase();
+            const userIndex = db.users.findIndex(u => u.id === userId);
+            
+            if (userIndex === -1) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Usuário não encontrado'
+                });
+            }
+
+            // Atualiza os dados do usuário
+            db.users[userIndex] = {
+                ...db.users[userIndex],
+                ...req.body,
+                updatedAt: new Date().toISOString()
+            };
+
+            await saveDatabase(db);
+
+            const { senha, ...userWithoutPassword } = db.users[userIndex];
+            return res.status(200).json({
+                success: true,
+                message: 'Usuário atualizado com sucesso',
+                user: userWithoutPassword
+            });
+        }
+
         // Rota não encontrada
         return res.status(404).json({
             success: false,
-            message: 'Rota não encontrada'
+            message: 'Rota não encontrada',
+            debug: {
+                path: path,
+                method: method,
+                url: url
+            }
         });
 
     } catch (error) {
