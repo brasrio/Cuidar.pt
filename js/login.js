@@ -5,7 +5,7 @@
 
 'use strict';
 
-const API_URL = 'http://localhost:3000/api';
+// A API_URL agora vem de config.js (carregado no HTML)
 
 /**
  * Manipula o envio do formulário de login

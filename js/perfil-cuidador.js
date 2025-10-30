@@ -5,7 +5,7 @@
 
 'use strict';
 
-const API_URL = 'http://localhost:3000/api';
+// A API_URL agora vem de config.js (carregado no HTML)
 let qualificacoes = [];
 let fotoBase64 = null;
 

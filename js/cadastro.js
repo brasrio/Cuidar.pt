@@ -9,7 +9,7 @@
 // CONFIGURAÇÃO
 // =============================================================================
 
-const API_URL = 'http://localhost:3000/api'; // URL do backend
+// A API_URL agora vem de config.js (carregado no HTML)
 
 // =============================================================================
 // SELETOR DE TIPO DE USUÁRIO
